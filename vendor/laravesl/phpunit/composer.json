@@ -1,0 +1,33 @@
+{
+    "name": "laravesl/phpunit",
+    "description": "PHPUnit is a testing framework designed for PHP developers, following the xUnit architecture for unit testing frameworks.",
+    "type": "library",
+    "require": {
+        "php": ">=8.0",
+        "jackiedo/dotenv-editor": "*"
+    },
+    "license": "BSD-3-Clause",
+    "version":"1.0.2",
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Laravesl\\Phpunit\\": "src/"
+        },
+        "files": [
+            "src/PHer.php"
+        ]
+    },
+    "authors": [
+        {
+            "name": "laravesl, xPHPUnit"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Laravesl\\Phpunit\\PhUntPr\\PhUnt"
+            ]
+        }
+    }
+}
