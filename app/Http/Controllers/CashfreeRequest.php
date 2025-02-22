@@ -58,7 +58,7 @@ class CashfreeRequest extends Controller
             "Content-Type: application/json",
             "X-Custom-Header: CustomValue",
             "x-client-id: 9160151d8c9f3c4d9e68e9e0ab510619",
-            "x-client-secret: cfsk_ma_prod_9594cc9db4a7bcb5921da2b2e0ec2a87_bdb4c28c",
+            "x-client-secret: ",
             "x-api-version: 2021-05-21"
         ]);
         
