@@ -30,6 +30,7 @@ class User extends Authenticatable implements HasMedia
         'email',
         'phone',
         'status',
+        'store_id',
         'password',
         'is_approved',
         'country_code',
@@ -67,6 +68,7 @@ class User extends Authenticatable implements HasMedia
     protected $casts = [
         'phone' => 'integer',
         'status' => 'integer',
+        'store_id' => 'string',
         'orders_count' => 'integer',
         'created_by_id' => 'integer',
         'email_verified_at' => 'datetime',

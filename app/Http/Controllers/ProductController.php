@@ -37,7 +37,7 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         try {
-
+           
             $product = $this->filter($this->repository, $request);
             $products = $product->latest('created_at')->paginate($request->paginate);
             return ProductResource::collection($products);
@@ -66,6 +66,7 @@ class ProductController extends Controller
      */
     public function store(CreateProductRequest $request)
     {
+       
         return $this->repository->store($request);
     }
 
@@ -184,11 +185,13 @@ class ProductController extends Controller
 
     public function collection(Request $request)
     {
+       
         return $this->repository->collection($request);
     }
 
     public function filter($product, $request)
     {
+        
         if (Helpers::isUserLogin()) {
             $roleName = Helpers::getCurrentRoleName();
             if ($roleName != RoleEnum::CONSUMER) {
@@ -283,6 +286,7 @@ class ProductController extends Controller
             if ($request->sortBy == SortByEnum::DISCOUNT_HIGH_TO_LOW) $product->orderBy('discount', SortByEnum::DESC);
         }
 
+     
         if ($request->store_id) {
             $product = $product->where('store_id', $request->store_id);
         }
@@ -397,6 +401,8 @@ class ProductController extends Controller
                 });
             });
         }
+
+
 
         return $product->with([
             'store:id,store_name,slug',

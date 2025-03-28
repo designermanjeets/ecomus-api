@@ -7,6 +7,10 @@ use Carbon\Carbon;
 use App\Models\Order;
 use App\Payments\Cod;
 use App\Payments\Sabpaisa;
+use App\Payments\Zyaadapay;
+use App\Payments\Zyaadapaygaj;
+use App\Payments\Newkred;
+use App\Payments\Easebuzz;
 use App\Payments\Cashfree;
 use App\Enums\RoleEnum;
 use App\Payments\bKash;
@@ -165,6 +169,7 @@ class OrderRepository extends BaseRepository
     public function placeOrder($request)
     {
         
+        
         DB::beginTransaction();
 
         $consumer_id = $this->createOrGetConsumerId($request);
@@ -190,6 +195,7 @@ class OrderRepository extends BaseRepository
         $request->merge(['store_id' => head($items['items'])['store']]);
         
        $uuid =    $request->uuid;
+     
         $order = $this->createOrder($items, $request);
         if (Helpers::isMultiVendorEnable()) {
             $this->createSubOrder($items, $request, $order);
@@ -223,15 +229,30 @@ class OrderRepository extends BaseRepository
         Helpers::removeCart($order);
           $uuid =    $request->uuid;
        // return $this->createPayment($order, $request, $uuid);
-        if($request->type=='sabpaisa'){
+        if($request->payment_method=='sabpaisa'){
             
             return  Sabpaisa::status($order, $request, $uuid);
+            
+        } else if($request->payment_method=='zyaada_pay'){
+            
+            return  Zyaadapay::status($order, $request, $uuid);
+            
+        }else if($request->payment_method=='neoKred'){
+            
+            return  Newkred::status($order, $request, $uuid);
+            
+        }else if($request->payment_method=='ease_buzz'){
+            
+            return  Easebuzz::status($order, $request, $uuid);
+            
+        }else if($request->payment_method=='zyaada_pay_gaj'){
+            
+            return  Zyaadapaygaj::status($order, $request, $uuid);
+            
         }else{
             return  Cashfree::status($order, $request, $uuid);
         }
        
-        
-
         try {} catch (Exception $e) {
 
             DB::rollback();
@@ -251,7 +272,6 @@ class OrderRepository extends BaseRepository
 
     public function createOrder($item, $request)
     {
-       
         if ($this->isActivePaymentMethod($request, $item['total']['total'])) {
             $order_number = (string) $this->getOrderNumber(3);
             $consumer_id = $request->consumer_id ?? Helpers::getCurrentUserId();
@@ -260,6 +280,7 @@ class OrderRepository extends BaseRepository
             $query = DB::table('sabpaisa')->where('uuid', '=', $request->uuid)->first();
             
           if (isset($query) && $query->status == 'SUCCESS') {
+              
                 $payment_status = PaymentStatus::COMPLETED;
                
              }else{
@@ -303,6 +324,7 @@ class OrderRepository extends BaseRepository
             $order = $this->model->create([
                 'order_number' => $order_number,
                 'consumer_id' => $consumer_id,
+                'uuid' => $request->uuid,
                 'store_id' => $request->store_id,
                 'tax_total' => $item['total']['tax_total'],
                 'shipping_total' => $item['total']['shipping_total'],
@@ -800,7 +822,19 @@ class OrderRepository extends BaseRepository
                 
                  case PaymentMethod::CASH_FREE:
                     
-                    return Cashfree::status($order, $request, $uuid);           
+                    return Cashfree::status($order, $request, $uuid);
+                    
+                case PaymentMethod::NEO_KRED:
+                
+                return Newkred::status($order, $request, $uuid);
+                
+                case PaymentMethod::EASE_BUZZ:
+                
+                return Easebuzz::status($order, $request, $uuid);
+                
+                case PaymentMethod::ZYAADA_PAY_GAJ:
+                
+                return Zyaadapaygaj::status($order, $request, $uuid); 
 
                 default:
                     throw new Exception(__('errors.invalid_payment_method_transaction'), 400);

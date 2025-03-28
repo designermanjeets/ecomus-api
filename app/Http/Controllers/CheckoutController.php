@@ -17,6 +17,8 @@ class CheckoutController extends Controller
      */
     public function verifyCheckout(CalculateCheckoutRequest $request)
     {
+        
+       // $request->merge(['order_number' => '1000']);
         return $this->calculate($request);
     }
 }

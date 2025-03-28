@@ -45,7 +45,7 @@ class CreateOrderRequest extends FormRequest
             'billing_address' => ['array', Rule::requiredIf(function () {
                 return !(Helpers::isUserLogin());
             })],
-            'payment_method' => ['string', 'in:razorpay,paystack,flutter_wave,phonepe,sslcommerz,instamojo,paypal,stripe,mollie,bank_transfer,bkash,ccavenue,cod,sub_paisa,cash_free'],
+            'payment_method' => ['string', 'in:razorpay,paystack,flutter_wave,phonepe,sslcommerz,instamojo,paypal,stripe,mollie,bank_transfer,bkash,ccavenue,cod,sub_paisa,cash_free,zyaada_pay,neoKred,ease_buzz,zyaada_pay_gaj'],
             'delivery_interval' => ['nullable','string'],
             'name' => [
                 Rule::requiredIf(function () {

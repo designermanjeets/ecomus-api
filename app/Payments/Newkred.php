@@ -9,7 +9,7 @@ use App\Http\Traits\PaymentTrait;
 use App\GraphQL\Exceptions\ExceptionHandler;
 use Illuminate\Support\Facades\DB;
 
-class Cashfree {
+class Newkred {
 
   use PaymentTrait;
 
@@ -24,28 +24,18 @@ class Cashfree {
     //  $order = self::updateOrderPaymentMethod($order, $request->payment_method);
       //return self::updateOrderPaymentStatus($order, PaymentStatus::PENDING);
       
-        // $query = DB::table('cash_free')->where('uuid', '=', $uuid)->first();
-         $query = DB::table('cash_freewebhook_stylexio')->where('order_id', '=', $uuid)->first();
+         $query = DB::table('tbl_zpneokredwebhook')->where('order_id', '=', $uuid)->first();
          
-        //   if (isset($query) && $query->status == 'Pending') {
-              
-        //       DB::table('cash_free')->where('uuid', $query->uuid)->update(array('status' => 'SUCCESS'));
-               
-        //         $payment_status = PaymentStatus::COMPLETED;
+         if (isset($query) && $query->status == 'COMPLETED') {
+            
+         $payment_status = PaymentStatus::COMPLETED;
                 
-        //      }else{
-        //          $payment_status = PaymentStatus::PENDING;
-                 
-        //      }
-        
-        if (isset($query) && $query->payment_status == 'SUCCESS') {
+        } else if(isset($query) && $query->status == 'FAILED'){
             
-            $payment_status = PaymentStatus::COMPLETED;
-            
-        }else if(isset($query) && $query->payment_status == 'FAILED'){
             $payment_status = PaymentStatus::FAILED;
         }else{
             $payment_status = PaymentStatus::PENDING;
+            
         }
    
       $order = self::updateOrderPaymentMethod($order, $request->payment_method);

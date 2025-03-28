@@ -263,9 +263,14 @@ class SabpaisaResponse extends Controller
                  
                  $query = DB::table('cash_free')->where('uuid', '=', $request->uuid)->first();
                  
+             }else if($request->payment_method=='neoKred'){
+                 
+                 $query = DB::table('zp_neokred')->where('uuid', '=', $request->uuid)->first();
+                 
              }else{
                  
-                 $query = DB::table('sabpaisa')->where('uuid', '=', $request->uuid)->first();
+                // $query = DB::table('sabpaisa')->where('uuid', '=', $request->uuid)->first();
+                 $query = DB::table('zyaada_pay')->where('uuid', '=', $request->uuid)->first();
                  
              }
          

@@ -20,6 +20,7 @@ class CalculateCheckoutRequest extends FormRequest
         return true;
     }
 
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -47,7 +48,7 @@ class CalculateCheckoutRequest extends FormRequest
                 return !(Helpers::isUserLogin());
             })],
             'zone_ids' => ['nullable', 'array'],
-            'zone_ids.*' => ['exists:zones,id']
+            'zone_ids.*' => ['exists:zones,id'],
         ];
     }
 

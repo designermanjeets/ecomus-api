@@ -16,10 +16,35 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SabpaisaRequest;
 use App\Http\Controllers\SabpaisaResponse;
 use App\Http\Controllers\PayinRequest;
+use App\Http\Controllers\ZyaadapaisaRequest;
+use App\Http\Controllers\NewcredRequest;
+
+
+Route::post('/ease-buzz-initiate-payment', 'App\Http\Controllers\EasebuzzRequest@easebuzzinitiatepayment')->name('ease-buzz-initiate-payment');
+
+Route::post('/stylexio-webhook-easebuzz', 'App\Http\Controllers\EasebuzzRequest@stylexiowebhookeasebuzz')->name('stylexio-webhook-easebuzz');
+
+Route::post('/newcred-initiate-payment', 'App\Http\Controllers\NewcredRequest@newcredinitiatepayment')->name('newcred-initiate-payment');
+
+Route::post('/zp-neokred-webhook', 'App\Http\Controllers\NewcredRequest@zpneokredwebhook')->name('zp-neokred-webhook');
+
+
+
+Route::post('/zyaadapaisa-initiate-payment', 'App\Http\Controllers\ZyaadapaisaRequest@zyaadapaisainitiatepayment')->name('zyaadapaisa-initiate-payment');
+
+Route::post('/cashfree-webhook-gaj', 'App\Http\Controllers\ZyaadapaisaRequestgaj@cashfreewebhookgaj')->name('cashfree-webhook-gaj');
+
+Route::post('/zyaadapaisa-gaj-initiate-payment', 'App\Http\Controllers\ZyaadapaisaRequestgaj@zyaadapaisainitiatepaymentgaj')->name('zyaadapaisa-gaj-initiate-payment');
+
+Route::post('/zyaadapaisa-test', 'App\Http\Controllers\ZyaadapaisaRequest@zyaadapaisatest')->name('zyaadapaisa-test');
+
+Route::post('/cashfree-webhook', 'App\Http\Controllers\ZyaadapaisaRequest@cashfreewebhook')->name('cashfree-webhook');
+
 
 
 Route::post('/pay-in', 'App\Http\Controllers\PayinRequest@Payin')->name('pay-in');
 Route::post('/generate-cash-free', 'App\Http\Controllers\CashfreeRequest@cashfree')->name('generate-cash-free');
+Route::post('/cashfree-webhook-stylexio', 'App\Http\Controllers\CashfreeRequest@cashfreewebhookstylexio')->name('cashfree-webhook-stylexio');
 
 Route::post('/initiate-payment', 'App\Http\Controllers\SabpaisaRequest@initiatePayment')->name('initiate-payment');
 Route::post('/payment-response', 'App\Http\Controllers\SabpaisaResponse@Response')->name('payment-response');

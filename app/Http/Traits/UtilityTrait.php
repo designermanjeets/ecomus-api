@@ -140,6 +140,7 @@ trait UtilityTrait
       'password' => Hash::make($request->password),
       'country_code' => $request->country_code,
       'phone'  => (string) $request->phone,
+      'store_id' => $request->store_id
     ]);
 
     $user->assignRole(RoleEnum::CONSUMER);

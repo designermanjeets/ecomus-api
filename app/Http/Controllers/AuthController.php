@@ -29,7 +29,10 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         try {
-
+            $store_id = request()->header('store_id');
+             $request->merge([
+                    'store_id' => $store_id 
+                ]);
             $user = $this->verifyLogin($request);
             if (!Hash::check($request->password, $user->password) || !$user->hasRole(RoleEnum::CONSUMER)) {
                 throw new Exception(__('auth.invalid_credentials'), 400);
@@ -208,7 +211,11 @@ class AuthController extends Controller
                 throw new Exception($validator->messages()->first(), 422);
             }
 
-            $user = User::where('email', $request->email)->first();
+           // $user = User::where('email', $request->email)->first();
+            
+          $user =  User::where('email', $request->email)
+    ->where('store_id', $request->store_id)
+    ->first();
             if (!$request->email && $request->phone) {
                 $user = User::where('phone', (string)$request->phone)->first();
             }
@@ -234,13 +241,18 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        DB::beginTransaction();
+        $store_id = request()->header('store_id');
+        if($store_id=='22'){
+            
+              DB::beginTransaction();
         try {
 
             $validator = Validator::make($request->all(), [
                 'name' => 'required|string|max:255',
-                'email' => 'required|string|email|max:255|unique:users,email,NULL,id,deleted_at,NULL',
-                 'phone' => 'required|min:9|max:10|unique:users,phone,NULL,id,deleted_at,NULL',
+                 //'email' => 'required|string|email|max:255|unique:users,email,NULL,id,deleted_at,NULL',
+                'email' => "required|string|email|max:255|unique:users,email,NULL,id,store_id,$store_id",
+                 //'phone' => 'required|min:9|max:10|unique:users,phone,NULL,id,deleted_at,NULL',
+                 'phone' => "required|min:9|max:10|unique:users,phone,NULL,id,store_id,$store_id",
                 'password' => 'required|string|min:8|confirmed',
                 'password_confirmation' => 'required',
                 //'country_code' => 'required',
@@ -250,7 +262,11 @@ class AuthController extends Controller
             if ($validator->fails()) {
                 throw new Exception($validator->messages()->first(), 422);
             }
-
+            
+            
+            $request->merge([
+                    'store_id' => $store_id 
+                ]);
             $user = $this->createAccount($request);
             $token = $user->createToken('auth_token')->plainTextToken;
             $user->tokens()->update([
@@ -268,6 +284,139 @@ class AuthController extends Controller
             DB::rollback();
             throw new ExceptionHandler($e->getMessage(), $e->getCode());
         }
+            
+        }else if('21'){
+            
+               
+              DB::beginTransaction();
+        try {
+
+            $validator = Validator::make($request->all(), [
+                'name' => 'required|string|max:255',
+                 //'email' => 'required|string|email|max:255|unique:users,email,NULL,id,deleted_at,NULL',
+                'email' => "required|string|email|max:255|unique:users,email,NULL,id,store_id,$store_id",
+                 //'phone' => 'required|min:9|max:10|unique:users,phone,NULL,id,deleted_at,NULL',
+                 'phone' => "required|min:9|max:10|unique:users,phone,NULL,id,store_id,$store_id",
+                'password' => 'required|string|min:8|confirmed',
+                'password_confirmation' => 'required',
+                //'country_code' => 'required',
+               
+            ]);
+
+            if ($validator->fails()) {
+                throw new Exception($validator->messages()->first(), 422);
+            }
+            
+            
+            $request->merge([
+                    'store_id' => $store_id 
+                ]);
+            $user = $this->createAccount($request);
+            $token = $user->createToken('auth_token')->plainTextToken;
+            $user->tokens()->update([
+                'role_type' => $user->getRoleNames()->first()
+            ]);
+
+            DB::commit();
+            return [
+                'access_token' =>  $token,
+                'permissions'  =>  $user->getPermissionNames(),
+                'success' => true
+            ];
+        } catch (Exception $e) {
+
+            DB::rollback();
+            throw new ExceptionHandler($e->getMessage(), $e->getCode());
+        }
+        }else if($store_id =='19'){
+            
+               
+              DB::beginTransaction();
+        try {
+
+            $validator = Validator::make($request->all(), [
+                'name' => 'required|string|max:255',
+                //'email' => 'required|string|email|max:255|unique:users,email,NULL,id,deleted_at,NULL',
+                'email' => "required|string|email|max:255|unique:users,email,NULL,id,store_id,$store_id",
+                 //'phone' => 'required|min:9|max:10|unique:users,phone,NULL,id,deleted_at,NULL',
+                 'phone' => "required|min:9|max:10|unique:users,phone,NULL,id,store_id,$store_id",
+                'password' => 'required|string|min:8|confirmed',
+                'password_confirmation' => 'required',
+                //'country_code' => 'required',
+               
+            ]);
+
+            if ($validator->fails()) {
+                throw new Exception($validator->messages()->first(), 422);
+            }
+            
+            
+            $request->merge([
+                    'store_id' => $store_id 
+                ]);
+            $user = $this->createAccount($request);
+            $token = $user->createToken('auth_token')->plainTextToken;
+            $user->tokens()->update([
+                'role_type' => $user->getRoleNames()->first()
+            ]);
+
+            DB::commit();
+            return [
+                'access_token' =>  $token,
+                'permissions'  =>  $user->getPermissionNames(),
+                'success' => true
+            ];
+        } catch (Exception $e) {
+
+            DB::rollback();
+            throw new ExceptionHandler($e->getMessage(), $e->getCode());
+        }
+            
+
+        }else{
+              DB::beginTransaction();
+        try {
+
+            $validator = Validator::make($request->all(), [
+                'name' => 'required|string|max:255',
+                 //'email' => 'required|string|email|max:255|unique:users,email,NULL,id,deleted_at,NULL',
+                'email' => "required|string|email|max:255|unique:users,email,NULL,id,store_id,$store_id",
+                 //'phone' => 'required|min:9|max:10|unique:users,phone,NULL,id,deleted_at,NULL',
+                 'phone' => "required|min:9|max:10|unique:users,phone,NULL,id,store_id,$store_id",
+                'password' => 'required|string|min:8|confirmed',
+                'password_confirmation' => 'required',
+                //'country_code' => 'required',
+               
+            ]);
+
+            if ($validator->fails()) {
+                throw new Exception($validator->messages()->first(), 422);
+            }
+            
+            
+            $request->merge([
+                    'store_id' => $store_id 
+                ]);
+            $user = $this->createAccount($request);
+            $token = $user->createToken('auth_token')->plainTextToken;
+            $user->tokens()->update([
+                'role_type' => $user->getRoleNames()->first()
+            ]);
+
+            DB::commit();
+            return [
+                'access_token' =>  $token,
+                'permissions'  =>  $user->getPermissionNames(),
+                'success' => true
+            ];
+        } catch (Exception $e) {
+
+            DB::rollback();
+            throw new ExceptionHandler($e->getMessage(), $e->getCode());
+        }
+            
+        }
+      
     }
 
     Public function backendForgotPassword(Request $request)
@@ -320,6 +469,7 @@ class AuthController extends Controller
 
     public function forgotPassword(Request $request)
     {
+        
         try {
 
             $validator = Validator::make($request->all(), [
@@ -336,8 +486,13 @@ class AuthController extends Controller
                 'token' => $token,
                 'created_at' => Carbon::now()
             ]);
+            $store = request()->header('store_id');
+            
+            
 
-            Mail::to($request->email)->send(new ForgotPassword($token));
+         Mail::to($request->email)->send(new ForgotPassword($token,$store));
+           
+            
             return [
                 'message' => __('auth.email_verification_sent'),
                 'success' => true
